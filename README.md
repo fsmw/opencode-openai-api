@@ -21,6 +21,15 @@ Minimal plugin + CLI command to expose OpenCode models over an OpenAI-compatible
 
 # Custom port + API key
 /home/fsmw/dev/ai-cli/bin/opencode server-openai --port 5000 --api-key my-secret-key
+
+# Auto-generate a key (default behavior)
+# If you don't pass --key/--api-key, a random key is generated and printed
+/home/fsmw/dev/ai-cli/bin/opencode server-openai
+```
+
+### Set your own key
+```bash
+/home/fsmw/dev/ai-cli/bin/opencode server-openai --key my-fixed-key
 ```
 
 ### Add to PATH (optional)

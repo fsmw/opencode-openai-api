@@ -18,6 +18,7 @@ export const OpenAIServerCommand = cmd({
         default: "127.0.0.1",
       })
       .option("api-key", {
+        alias: ["key"],
         type: "string",
         describe: "API key for authorization (Bearer token)",
         default: undefined,
@@ -25,7 +26,9 @@ export const OpenAIServerCommand = cmd({
   handler: async (args) => {
     const port = Number(args.port)
     const host = args.host as string
-    const apiKey = args["api-key"] as string | undefined
+    const providedKey = (args["api-key"] as string | undefined) ?? (args["key"] as string | undefined)
+    // If no key provided, generate a random one and show it
+    const apiKey = providedKey ?? crypto.randomUUID().replace(/-/g, "")
 
     // Set environment variables for the plugin
     if (apiKey) {
@@ -74,9 +77,11 @@ export const OpenAIServerCommand = cmd({
       console.log(`   GET    http://${host}:${port}/v1/models`)
       console.log(`   GET    http://${host}:${port}/health`)
       console.log(`   GET    http://${host}:${port}/openapi.json`)
-      if (apiKey) {
-        console.log(`🔐 API Key authentication enabled`)
+      console.log(`\n🔐 API key: ${apiKey}`)
+      if (!providedKey) {
+        console.log(`   (generated for this run; pass --key <value> to set your own)`) 
       }
+      console.log(`🔐 API Key authentication enabled`)
       console.log(`\n⏸️  Press Ctrl+C to stop the server`)
 
       // Keep the server running
